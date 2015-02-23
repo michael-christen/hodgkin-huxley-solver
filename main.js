@@ -1,16 +1,7 @@
 function create_dataset(vs,vi,ns,dt,pn) {
 	var r = [];
-	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn);
+	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn)['v'];
 	return hh_basic_data;
-	/*
-	   for(var i = 0; i < hh_basic_data.length; ++i){
-	   var d = hh_basic_data[i];
-	   r['labels'].push(d[0]);
-	   r['data'].push(d[1]);
-	   console.log(d[0] + ", " + d[1]);
-	   }
-	 */
-	return r;
 }
 
 function getNumber(s){
