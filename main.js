@@ -1,13 +1,43 @@
-function create_dataset(vs,vi,ns,dt,pn) {
-	var r = [];
-	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn)['v'];
-	return hh_basic_data;
+var keys = ['t', 'v','in','ik','n','m','h'];
+var keyToTitleMapping = {
+	't':   'Time (mS)',
+	'v':   'Voltage (mV)', 
+	'in':  'Ina (A?)', 
+	'ik':  'Ik (A?)',
+	'n':   'N',
+	'm':   'M',
+	'h':   'H',
+};
+function create_dataset(vs,vi,ns,dt,pn, useArr) {
+	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn);
+	var output_arr = [];
+	var data_len = hh_basic_data[useArr[0]].length;
+	for(var i = 0; i < data_len; ++i) {
+		var arr = []
+		for(var j = 0; j < useArr.length; ++j) {
+			arr = arr.concat(hh_basic_data[useArr[j]][i]);
+		}
+		output_arr.push(arr);
+	}
+	return output_arr;
 }
 
 function getNumber(s){
 	return Number(document.getElementById(s).value);
 }
 document.getElementById("reeval-btn").onclick = reevaluate;
+
+function getUseArr() {
+	var cboxes = document.querySelectorAll(":checked");
+	var arr = ['t',];
+	for(var i = 0; i < cboxes.length; ++i) {
+		var m = /check_(\w+)/.exec(cboxes[i].id);
+		if(m) {
+			arr.push(m[1]);
+		}
+	}
+	return arr;
+}
 function reevaluate(e) {
 	e.preventDefault();
 	var vs = getNumber("v_stimulus");
@@ -15,8 +45,10 @@ function reevaluate(e) {
 	var ns = getNumber("n_steps");
 	var dt = getNumber("dt");
 	var pn = getNumber("print_every_n");
-	var dataset = create_dataset(vs,v0,ns,dt,pn);
-	drawChart(dataset);
+	var useArr = getUseArr();
+	var dataset = create_dataset(vs,v0,ns,dt,pn, useArr);
+	drawChart(dataset, useArr);
+	dataset = create_dataset(vs,v0,ns,dt,pn, keys);
 	fillTable(dataset);
 }
 
@@ -44,9 +76,14 @@ function fillTable(dataset){
 }
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(reevaluate);
-function drawChart(dataset) {
+function drawChart(dataset, useArr) {
+	var dataTitles = [];
+	for(var i = 0; i < useArr.length; ++i) {
+		dataTitles = dataTitles.concat(keyToTitleMapping[useArr[i]]);
+	}
+	console.log(dataTitles);
 	var data = google.visualization.arrayToDataTable(
-			[['Time (ms)', 'Voltage (mV)']].concat(dataset)
+			[dataTitles].concat(dataset)
 			);
 
 	var options = {
