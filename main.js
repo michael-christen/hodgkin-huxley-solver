@@ -8,8 +8,8 @@ var keyToTitleMapping = {
 	'm':   'M',
 	'h':   'H',
 };
-function create_dataset(vs,vi,ns,dt,pn, useArr) {
-	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn);
+function create_dataset(vs,vi,ns,dt,pn,holdV, useArr) {
+	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn,holdV);
 	var output_arr = [];
 	var data_len = hh_basic_data[useArr[0]].length;
 	for(var i = 0; i < data_len; ++i) {
@@ -38,6 +38,12 @@ function getUseArr() {
 	}
 	return arr;
 }
+
+function getHold() {
+	var matches = document.querySelectorAll("#hold_v:checked");
+	return matches.length > 0;
+}
+
 function reevaluate(e) {
 	e.preventDefault();
 	var vs = getNumber("v_stimulus");
@@ -45,10 +51,11 @@ function reevaluate(e) {
 	var ns = getNumber("n_steps");
 	var dt = getNumber("dt");
 	var pn = getNumber("print_every_n");
+	var holdV = getHold();
 	var useArr = getUseArr();
-	var dataset = create_dataset(vs,v0,ns,dt,pn, useArr);
+	var dataset = create_dataset(vs,v0,ns,dt,pn, holdV, useArr);
 	drawChart(dataset, useArr);
-	dataset = create_dataset(vs,v0,ns,dt,pn, keys);
+	dataset = create_dataset(vs,v0,ns,dt,pn, holdV, keys);
 	fillTable(dataset);
 }
 

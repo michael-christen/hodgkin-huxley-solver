@@ -52,7 +52,8 @@ function get_i_k(v,xn) {
 
 function get_hh_solution(stimulus_volts,
 			init_volts, num_steps,
-			dt, print_every_n_lines){
+			dt, print_every_n_lines,
+			holdV){
 	//default vals
 	init_volts = init_volts || 0.0;
 	num_steps  = num_steps  || 1000;
@@ -93,7 +94,9 @@ function get_hh_solution(stimulus_volts,
 		xm += get_d_prop(am,bm,xm,dt);
 		xh += get_d_prop(ah,bh,xh,dt);
 
-		v  += get_d_volts(v,xn,xm,xh,dt);
+		if(!holdV) {
+			v  += get_d_volts(v,xn,xm,xh,dt);
+		}
 		if(k - print_every_n_lines == 0){
 			result['t'].push(dt*i);
 			result['v'].push(v);
