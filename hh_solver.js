@@ -77,7 +77,7 @@ function get_hh_solution(stimulus_volts,
 	var v  = stimulus_volts;
 	var k  = print_every_n_lines;
 	var result = {};
-	var keys = ['in','ik','n','m','h','v','t',];
+	var keys = ['in','ik','n','m','h','v','t','in+ik',];
 	for(var i = 0; i < keys.length; ++i) {
 		result[keys[i]] = [];
 	}
@@ -102,6 +102,8 @@ function get_hh_solution(stimulus_volts,
 			result['v'].push(v);
 			result['in'].push(get_i_na(v,xm,xh));
 			result['ik'].push(get_i_k(v,xn));
+			result['in+ik'].push(get_i_na(v,xm,xh) +
+					get_i_k(v,xn));
 			result['n'].push(xn);
 			result['m'].push(xm);
 			result['h'].push(xh);

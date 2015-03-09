@@ -1,9 +1,10 @@
-var keys = ['t', 'v','in','ik','n','m','h'];
+var keys = ['t', 'v','in','ik', 'in+ik','n','m','h'];
 var keyToTitleMapping = {
 	't':   'Time (mS)',
 	'v':   'Voltage (mV)', 
 	'in':  'Ina (A?)', 
 	'ik':  'Ik (A?)',
+	'in+ik': 'INa + IK',
 	'n':   'N',
 	'm':   'M',
 	'h':   'H',
@@ -31,7 +32,7 @@ function getUseArr() {
 	var cboxes = document.querySelectorAll(":checked");
 	var arr = ['t',];
 	for(var i = 0; i < cboxes.length; ++i) {
-		var m = /check_(\w+)/.exec(cboxes[i].id);
+		var m = /check_(.+)/.exec(cboxes[i].id);
 		if(m) {
 			arr.push(m[1]);
 		}
@@ -96,7 +97,6 @@ function drawChart(dataset, useArr) {
 	var options = {
 	   title: 'Hodgkin & Huxley Solver',
 	   hAxis: {title: 'Time (ms)',  titleTextStyle: {color: '#333'}},
-	   vAxis: {title: 'Voltage (mV)', minValue: 0},
 	   animation: {duration: 1000, startup: true, easing: 'linear'},
 	   chartArea: {left: '10%'},
 	};
