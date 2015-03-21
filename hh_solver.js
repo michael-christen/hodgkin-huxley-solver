@@ -36,16 +36,32 @@ function get_d_volts(v,xn,xm,xh,dt){
 			get_i_leak(v));
 }
 
+function get_i_total(dv,dt,v,xn,xm,xh) {
+	var cm = MEMBRANE_CAPACITANCE;
+	return  (cm*dv/dt+
+			get_i_k(v,xn) + 
+			get_i_na(v,xm,xh) + 
+			get_i_leak(v));
+}
+
 function get_i_na(v,xm,xh) {
-	var gn = SODIUM_CONDUCTANCE;
 	var vn = SODIUM_VOLTAGE;
-	return gn*Math.pow(xm,3.0)*xh*(v-vn);  
+	return get_c_na(xm,xh)*(v-vn);  
+}
+
+function get_c_na(xm,xh) {
+	var gn = SODIUM_CONDUCTANCE;
+	return gn*Math.pow(xm,3.0)*xh;
 }
 
 function get_i_k(v,xn) {
-	var gk = POTASSIUM_CONDUCTANCE;
 	var vk = POTASSIUM_VOLTAGE;
-	return gk*Math.pow(xn,4.0)*(v-vk);
+	return get_c_k(xn)*(v-vk);
+}
+
+function get_c_k(xn) {
+	var gk = POTASSIUM_CONDUCTANCE;
+	return gk*Math.pow(xn,4.0);
 }
 
 function get_i_leak(v) {
@@ -81,7 +97,7 @@ function get_hh_solution(stimulus_volts,
 	var v  = stimulus_volts;
 	var k  = print_every_n_lines;
 	var result = {};
-	var keys = ['in','ik','n','m','h','v','t','isum',];
+	var keys = ['in','ik','n','m','h','v','t','isum','cn','ck',];
 	for(var i = 0; i < keys.length; ++i) {
 		result[keys[i]] = [];
 	}
@@ -98,20 +114,23 @@ function get_hh_solution(stimulus_volts,
 		xm += get_d_prop(am,bm,xm,dt);
 		xh += get_d_prop(ah,bh,xh,dt);
 
+		dv = 0;
 		if(!holdV) {
-			v  += get_d_volts(v,xn,xm,xh,dt);
+			dv = get_d_volts(v,xn,xm,xh,dt);
 		}
+		v  += dv;
 		if(k - print_every_n_lines == 0){
 			result['t'].push(dt*i);
 			result['v'].push(v);
 			result['in'].push(get_i_na(v,xm,xh));
 			result['ik'].push(get_i_k(v,xn));
-			result['isum'].push(get_i_na(v,xm,xh) +
-					get_i_k(v,xn) + 
-					get_i_leak(v));
+			result['isum'].push(
+					get_i_total(dv,dt,v,xn,xm,xh));
 			result['n'].push(xn);
 			result['m'].push(xm);
 			result['h'].push(xh);
+			result['cn'].push(get_c_na(xm,xh));
+			result['ck'].push(get_c_k(xn));
 		}
 		k  -= 1;
 		if(k == 0){

@@ -1,4 +1,4 @@
-var keys = ['t', 'v','in','ik', 'isum','n','m','h'];
+var keys = ['t', 'v','in','ik', 'isum','n','m','h','cn','ck',];
 var keyToTitleMapping = {
 	't':   'Time (mS)',
 	'v':   'Voltage (mV)', 
@@ -8,6 +8,8 @@ var keyToTitleMapping = {
 	'n':   'N',
 	'm':   'M',
 	'h':   'H',
+	'cn':  'Na Conductance',
+	'ck':  'K Conductance',
 };
 function create_dataset(vs,vi,ns,dt,pn,holdV, useArr) {
 	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn,holdV);
