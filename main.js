@@ -8,8 +8,8 @@ var keyToTitleMapping = {
 	'n':   'N',
 	'm':   'M',
 	'h':   'H',
-	'cn':  'Na Conductance',
-	'ck':  'K Conductance',
+	'cn':  'Na Conductance (mmho/cm^2)',
+	'ck':  'K Conductance (mmho/cm^2)',
 };
 function create_dataset(vs,vi,ns,dt,pn,holdV, useArr) {
 	var hh_basic_data = get_hh_solution(vs,vi,ns,dt,pn,holdV);
