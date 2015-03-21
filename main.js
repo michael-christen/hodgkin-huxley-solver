@@ -1,10 +1,10 @@
-var keys = ['t', 'v','in','ik', 'in+ik','n','m','h'];
+var keys = ['t', 'v','in','ik', 'isum','n','m','h'];
 var keyToTitleMapping = {
 	't':   'Time (mS)',
 	'v':   'Voltage (mV)', 
-	'in':  'Ina (A?)', 
-	'ik':  'Ik (A?)',
-	'in+ik': 'INa + IK',
+	'in':  'Ina (uA/cm^2)', 
+	'ik':  'Ik (uA/cm^2)',
+	'isum': 'Total I (uA/cm^2)',
 	'n':   'N',
 	'm':   'M',
 	'h':   'H',
